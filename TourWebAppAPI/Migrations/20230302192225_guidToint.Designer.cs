@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourWebAppAPI.Data;
 
@@ -11,9 +12,11 @@ using TourWebAppAPI.Data;
 namespace TourWebAppAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302192225_guidToint")]
+    partial class guidToint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,17 +64,22 @@ namespace TourWebAppAPI.Migrations
                     b.Property<float>("TotalBill")
                         .HasColumnType("real");
 
+                    b.Property<int?>("TripsId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TripsId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Trip", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,22 +87,21 @@ namespace TourWebAppAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit");
-
-                    b.Property<float>("Cost")
+                    b.Property<float>("TotalMoneySpent")
                         .HasColumnType("real");
 
-                    b.Property<DateTime>("DateCompleted")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("TotalTripsCompleted")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalTripsPending")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookingId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Trips");
                 });
@@ -122,6 +129,10 @@ namespace TourWebAppAPI.Migrations
 
             modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>
                 {
+                    b.HasOne("TourWebAppAPI.Models.Trips", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("TripsId");
+
                     b.HasOne("TourWebAppAPI.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
@@ -131,21 +142,20 @@ namespace TourWebAppAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Trip", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
                 {
-                    b.HasOne("TourWebAppAPI.Models.Booking", "Booking")
-                        .WithOne("Trip")
-                        .HasForeignKey("TourWebAppAPI.Models.Trip", "BookingId")
+                    b.HasOne("TourWebAppAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Booking");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
                 {
-                    b.Navigation("Trip")
-                        .IsRequired();
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("TourWebAppAPI.Models.User", b =>

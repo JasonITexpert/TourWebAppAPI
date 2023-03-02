@@ -11,6 +11,6 @@ namespace TourWebAppAPI.Data
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Trips> Trips { get; set; }
+        public DbSet<Trip> Trips { get; set; }
     }
 }

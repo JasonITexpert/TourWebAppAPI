@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using TourWebAppAPI.Data;
+global using Microsoft.EntityFrameworkCore;
+global using TourWebAppAPI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

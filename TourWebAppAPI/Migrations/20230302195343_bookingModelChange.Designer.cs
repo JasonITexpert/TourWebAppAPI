@@ -12,8 +12,8 @@ using TourWebAppAPI.Data;
 namespace TourWebAppAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230301143712_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230302195343_bookingModelChange")]
+    partial class bookingModelChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,22 +64,17 @@ namespace TourWebAppAPI.Migrations
                     b.Property<float>("TotalBill")
                         .HasColumnType("real");
 
-                    b.Property<int?>("TripsId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TripsId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Trip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,19 +82,25 @@ namespace TourWebAppAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<float>("TotalMoneySpent")
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<float>("Cost")
                         .HasColumnType("real");
 
-                    b.Property<int>("TotalTripsCompleted")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("DateCompleted")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("TotalTripsPending")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -108,16 +109,15 @@ namespace TourWebAppAPI.Migrations
 
             modelBuilder.Entity("TourWebAppAPI.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -130,10 +130,6 @@ namespace TourWebAppAPI.Migrations
 
             modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>
                 {
-                    b.HasOne("TourWebAppAPI.Models.Trips", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("TripsId");
-
                     b.HasOne("TourWebAppAPI.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
@@ -143,20 +139,29 @@ namespace TourWebAppAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Trip", b =>
                 {
+                    b.HasOne("TourWebAppAPI.Models.Booking", "Booking")
+                        .WithOne("Trip")
+                        .HasForeignKey("TourWebAppAPI.Models.Trip", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TourWebAppAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Booking");
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Trips", b =>
+            modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>
                 {
-                    b.Navigation("Bookings");
+                    b.Navigation("Trip")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TourWebAppAPI.Models.User", b =>

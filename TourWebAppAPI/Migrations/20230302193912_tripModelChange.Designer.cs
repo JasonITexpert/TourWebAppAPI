@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TourWebAppAPI.Data;
 
@@ -11,9 +12,11 @@ using TourWebAppAPI.Data;
 namespace TourWebAppAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230302193912_tripModelChange")]
+    partial class tripModelChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,10 +94,14 @@ namespace TourWebAppAPI.Migrations
                     b.Property<DateTime>("DateCompleted")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("BookingId")
-                        .IsUnique();
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Trips");
                 });
@@ -134,18 +141,20 @@ namespace TourWebAppAPI.Migrations
             modelBuilder.Entity("TourWebAppAPI.Models.Trip", b =>
                 {
                     b.HasOne("TourWebAppAPI.Models.Booking", "Booking")
-                        .WithOne("Trip")
-                        .HasForeignKey("TourWebAppAPI.Models.Trip", "BookingId")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TourWebAppAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Booking");
-                });
 
-            modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>
-                {
-                    b.Navigation("Trip")
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TourWebAppAPI.Models.User", b =>

@@ -1,10 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace TourWebAppAPI.Models
+﻿namespace TourWebAppAPI.DTOs
 {
-    public class Booking
+    public class BookingDto
     {
-        public int Id { get; set; }
         public string Origin { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndTime { get; set; }
@@ -15,11 +12,6 @@ namespace TourWebAppAPI.Models
         public string? HotelName { get; set; }
         public float TotalBill { get; set; }
         public bool Cancelled { get; set; }
-      
-        public User User { get; set; }
         public int UserId { get; set; }
-        public Trip Trip { get; set; }
-        
-
     }
 }
