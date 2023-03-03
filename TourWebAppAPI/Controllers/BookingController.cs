@@ -4,7 +4,8 @@ using TourWebAppAPI.Models;
 
 namespace TourWebAppAPI.Controllers
 {
-    public class BookingController
+    [Route("api/[controller]")]
+    public class BookingController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
         public BookingController(ApplicationDbContext db)

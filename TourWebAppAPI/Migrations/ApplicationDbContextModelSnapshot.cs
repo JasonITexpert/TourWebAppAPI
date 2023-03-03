@@ -39,8 +39,8 @@ namespace TourWebAppAPI.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GroupSize")
-                        .HasColumnType("int");
+                    b.Property<long>("GroupSize")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("HotelName")
                         .HasColumnType("nvarchar(max)");

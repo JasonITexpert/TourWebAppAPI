@@ -39,5 +39,21 @@ namespace TourWebAppAPI.Controllers
             await _db.SaveChangesAsync();
             return _db.Users.ToList();
         }
+        
+        [HttpPatch]
+        public async Task<ActionResult<List<User>>> Edit(UserDTO userobj, int? userId)
+        {
+            var user = _db.Users.Find(userId);
+            if(userId == null)
+            {
+                return NotFound();
+            }
+            user.FirstName = userobj.FirstName;
+            user.LastName = userobj.LastName;
+           
+             _db.Users.Update(user);
+            await _db.SaveChangesAsync();
+            return _db.Users.ToList();
+        }
     }
 }

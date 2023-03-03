@@ -38,7 +38,8 @@ namespace TourWebAppAPI.Controllers
             {
                 Completed = request.Completed,
                 Cost = request.Cost,
-                DateCompleted = request.DateCompleted
+                DateCompleted = request.DateCompleted,
+                Booking = booking
                 
             };
             await _db.Trips.AddAsync(trip);

@@ -12,8 +12,8 @@ using TourWebAppAPI.Data;
 namespace TourWebAppAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230302195343_bookingModelChange")]
-    partial class bookingModelChange
+    [Migration("20230303112641_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,8 +42,8 @@ namespace TourWebAppAPI.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("GroupSize")
-                        .HasColumnType("int");
+                    b.Property<long>("GroupSize")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("HotelName")
                         .HasColumnType("nvarchar(max)");
@@ -94,15 +94,10 @@ namespace TourWebAppAPI.Migrations
                     b.Property<DateTime>("DateCompleted")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Trips");
                 });
@@ -147,15 +142,7 @@ namespace TourWebAppAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TourWebAppAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Booking");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TourWebAppAPI.Models.Booking", b =>

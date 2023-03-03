@@ -10,16 +10,17 @@ namespace TourWebAppAPI.Models
         public DateTime EndTime { get; set; }
         public DateTime DayBooked { get; set; } = DateTime.Now;
         public bool Individual { get; set; }
-        public int GroupSize { get; set; }
+        public uint GroupSize { get; set; }
         public bool HotelProvided { get; set; }
         public string? HotelName { get; set; }
         public float TotalBill { get; set; }
         public bool Cancelled { get; set; }
-      
+        [JsonIgnore]
         public User User { get; set; }
         public int UserId { get; set; }
         public Trip Trip { get; set; }
         
+
 
     }
 }
